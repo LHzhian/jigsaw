@@ -1,0 +1,174 @@
+<html>
+<head>
+<style>
+#panel{
+	background:#EBF0F5;
+	margin:100px auto;
+	width:600px;
+	height:600px;
+	position:relative;
+}
+.part1,.part2,.part3,.part4,.part5,.part6,.part7,.part8,.part9{
+	width:200px;
+	height:200px;
+	border:1px solid red;
+}
+.part1:hover,.part2:hover,.part3:hover,.part4:hover,.part5:hover,.part6:hover,.part7:hover,.part8:hover,.part9:hover{
+	cursor: pointer;
+}
+.part1{
+	background:url(index1.jpg) no-repeat;
+	background-position:0 -0;
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+.part2{
+	background:url(index1.jpg) no-repeat;
+	background-position:0 -200;
+	position:absolute;
+	left:0px;
+	top:200px;
+}
+.part3{
+	background:url(index1.jpg) no-repeat;
+	background-position:0 -400;
+	position:absolute;
+	left:0px;
+	top:400px;
+}
+.part4{
+	background:url(index1.jpg) no-repeat;
+	background-position:-200 -0;
+	position:absolute;
+	left:200px;
+	top:0px;
+}
+.part5{
+	background:url(index1.jpg) no-repeat;
+	background-position:-200 -200;
+	position:absolute;
+	left:200px;
+	top:200px;
+}
+.part6{
+	background:url(index1.jpg) no-repeat;
+	background-position:-200 -400;
+	position:absolute;
+	left:200px;
+	top:400px;
+}
+.part7{
+	background:url(index1.jpg) no-repeat;
+	background-position:-400 -0;
+	position:absolute;
+	left:400px;
+	top:0px;
+}
+.part8{
+	background:url(index1.jpg) no-repeat;
+	background-position:-400 -200;
+	position:absolute;
+	left:400px;
+	top:200px;
+}
+.part9{
+	background:url(index1.jpg) no-repeat;
+	background-position:-400 -400;
+	position:absolute;
+	left:400px;
+	top:400px;
+}
+</style>
+<script type="text/javascript" src="jquery-1.12.1.min.js"></script>
+<script type="text/javascript">
+	
+	var imgArr = new Array();
+	var pow = 200;
+	$(function(){
+		//保存初始状态
+		for(var i=1;i<10;i++){
+			var img = new Object();
+			img.backgroundPos = $(".part" + i).css("background-position");
+			img.initPos = i;
+			imgArr.push(img);
+		}
+		var tempArr = imgArr.concat();
+		tempArr = shuffle(tempArr);
+		//打乱图片
+		for(var i=1;i<10;i++){
+			console.log(tempArr[i-1].backgroundPos);
+			$(".part" + i).css("background-position",tempArr[i-1].backgroundPos);
+
+		}
+		
+		$("#panel div").click(function(){
+			var $this = $(this);
+			var thisX = $this.css("left").substring(0,$this.css("left").length-2);
+			var thisY = $this.css("top").substring(0,$this.css("top").length-2);
+			
+			$(this).siblings().each(function(){
+				
+				var nextX = $(this).css("left").substring(0,$(this).css("left").length-2);
+				var nextY = $(this).css("top").substring(0,$(this).css("top").length-2);
+				
+				var offset = Math.sqrt(Math.pow(Math.abs(thisX - nextX),2)+Math.pow(Math.abs(thisY - nextY),2)) - pow;
+
+				if( offset<1 ){
+					var bgPos = $(this).css("background-position");
+					
+					if(bgPos == imgArr[8].backgroundPos){
+						
+						$(this).css("background-position",$this.css("background-position"));
+						$this.css("background-position",bgPos);
+						
+						var modArr = new Array();
+						for(var i=1;i<10;i++){
+							var now = new Object();
+							now.backgroundPos = $(".part" + i).css("background-position");
+							now.initPos = i;
+							modArr.push(now);
+						}
+						if(isWin(imgArr,modArr))
+							alert("you win!");
+						return; 
+					}
+				}
+			});
+			
+		});
+	});
+	
+	var shuffle = function(o){
+		for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+		return o;
+	};
+	
+	var isWin = function(initArr,modArr){
+
+		for(var i=0;i<9;i++){
+			if(initArr[i].backgroundPos != modArr[i].backgroundPos)
+				return false;
+		}
+		return true;
+	}
+	
+</script>
+
+</head>
+
+<body>
+	<div id="panel">
+		<div class="part1"></div>
+		<div class="part2"></div>
+		<div class="part3"></div>
+		<div class="part4"></div>
+		<div class="part5"></div>
+		<div class="part6"></div>
+		<div class="part7"></div>
+		<div class="part8"></div>
+		<div class="part9"></div>
+	</div>
+</body>
+
+</html>
